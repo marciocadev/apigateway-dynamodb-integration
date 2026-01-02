@@ -72,22 +72,9 @@ Note: The actual API base URL is created by CDK and will look like `https://{res
   - 400 — bad input
   - 500 — internal error
 
-- Example using the `payloads/post_album_1.rest` (or `curl`):
-
-```bash
-curl -X POST "$API_URL/album" \
-  -H "Content-Type: application/json" \
-  -d @payloads/post_album_1.rest
-```
-
 ### GET /
 - Purpose: Scan the table and return all albums
 - Response: 200 OK with JSON array of albums (artist, album, tracks)
-- Example:
-
-```bash
-curl "$API_URL/"
-```
 
 ### DELETE /{artist}/{album}
 - Purpose: Delete an album by Artist and Album
@@ -96,12 +83,6 @@ curl "$API_URL/"
   - 200 OK — deleted item returned when found
   - 404 — item not found
   - 400 / 500 — error
-
-- Example:
-
-```bash
-curl -X DELETE "$API_URL/Pink%20Floyd/The%20Dark%20Side%20of%20the%20Moon"
-```
 
 ---
 
@@ -149,7 +130,7 @@ cdk bootstrap
 2. Synthesize and deploy:
 
 ```bash
-npm run build
+cdk synth
 cdk deploy
 ```
 
