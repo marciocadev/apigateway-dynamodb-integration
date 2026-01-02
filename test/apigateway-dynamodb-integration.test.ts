@@ -1,17 +1,81 @@
-// import * as cdk from 'aws-cdk-lib/core';
-// import { Template } from 'aws-cdk-lib/assertions';
-// import * as ApigatewayDynamodbIntegration from '../lib/apigateway-dynamodb-integration-stack';
+import * as cdk from 'aws-cdk-lib';
+import { Template } from 'aws-cdk-lib/assertions';
+import { ApigatewayDynamodbIntegrationStack } from '../lib/apigateway-dynamodb-integration-stack';
 
-// example test. To run these tests, uncomment this file along with the
-// example resource in lib/apigateway-dynamodb-integration-stack.ts
-test('SQS Queue Created', () => {
-//   const app = new cdk.App();
-//     // WHEN
-//   const stack = new ApigatewayDynamodbIntegration.ApigatewayDynamodbIntegrationStack(app, 'MyTestStack');
-//     // THEN
-//   const template = Template.fromStack(stack);
+// Unit tests for the CDK stack resources
 
-//   template.hasResourceProperties('AWS::SQS::Queue', {
-//     VisibilityTimeout: 300
-//   });
+test('DynamoDB Table Created', () => {
+  const app = new cdk.App();
+  const stack = new ApigatewayDynamodbIntegrationStack(app, 'TestStack');
+
+  const template = Template.fromStack(stack);
+
+  template.hasResourceProperties('AWS::DynamoDB::Table', {
+    TableName: 'apigateway-dynamodb-integration'
+  });
 });
+
+test('API Gateway RestApi Created', () => {
+  const app = new cdk.App();
+  const stack = new ApigatewayDynamodbIntegrationStack(app, 'TestStack');
+
+  const template = Template.fromStack(stack);
+
+  template.hasResourceProperties('AWS::ApiGateway::RestApi', {
+    Name: 'apigateway-dynamodb-integration'
+  });
+});
+
+test('CloudWatch Log Group Created for API Gateway', () => {
+  const app = new cdk.App();
+  const stack = new ApigatewayDynamodbIntegrationStack(app, 'TestStack');
+
+  const template = Template.fromStack(stack);
+
+  template.hasResourceProperties('AWS::Logs::LogGroup', {
+    LogGroupName: '/aws/api-gateway/apigateway-dynamodb-integration'
+  });
+});
+
+test('Request Validator configured', () => {
+  const app = new cdk.App();
+  const stack = new ApigatewayDynamodbIntegrationStack(app, 'TestStack');
+
+  const template = Template.fromStack(stack);
+
+  template.hasResourceProperties('AWS::ApiGateway::RequestValidator', {
+    ValidateRequestBody: true,
+    ValidateRequestParameters: true
+  });
+});
+
+test('Model for POST /album exists', () => {
+  const app = new cdk.App();
+  const stack = new ApigatewayDynamodbIntegrationStack(app, 'TestStack');
+
+  const template = Template.fromStack(stack);
+
+  template.hasResourceProperties('AWS::ApiGateway::Model', {
+    ContentType: 'application/json'
+  });
+});
+
+test('HTTP Methods: GET, POST and DELETE exist', () => {
+  const app = new cdk.App();
+  const stack = new ApigatewayDynamodbIntegrationStack(app, 'TestStack');
+
+  const template = Template.fromStack(stack);
+
+  template.hasResourceProperties('AWS::ApiGateway::Method', {
+    HttpMethod: 'POST'
+  });
+
+  template.hasResourceProperties('AWS::ApiGateway::Method', {
+    HttpMethod: 'DELETE'
+  });
+
+  template.hasResourceProperties('AWS::ApiGateway::Method', {
+    HttpMethod: 'GET'
+  });
+});
+
