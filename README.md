@@ -30,6 +30,8 @@ API Gateway uses an IAM role to directly call DynamoDB actions (PutItem, Scan, D
 
 ## Architecture & Resources 🔧
 
+![Architecture Diagram](./apigateway-dinamodb-integration.jpg)
+
 - DynamoDB Table: `apigateway-dynamodb-integration`
   - Partition key: `Artist` (String)
   - Sort key: `Album` (String)
